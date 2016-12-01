@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aap>
+    <tasklist>
+        <!-- initialisation modules run every time -->
+        <initialisation>
+            <module><name>aamod_checkparameters</name></module>
+            <module><name>aamod_evaluatesubjectnames</name></module>
+            <module><name>aamod_make_subjects_short</name></module>
+            <module><name>aamod_study_init</name></module>
+            <module><name>aamod_newsubj_init</name></module>
+        </initialisation>
+
+        <!-- main modules run once only (unless done flag is removed) -->
+        <main>
+            <module><name>aamod_pilab_importstimuli</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <stimfun>facedist_importstimuli</stimfun>
+                                    <plotdims>6 4</plotdims>
+                                    <donumbers>0</donumbers>
+                                    <resortind>facedist_resortind</resortind>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module><name>aamod_pilab_importrsapredictors</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <predictorfun>facedist_rsapredictors</predictorfun>
+                                    <resortind>facedist_resortind</resortind>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <nrows>4</nrows>
+                                    <gridlines>4 8 12 16 20</gridlines>
+                                    <pluginpath>facedist_rdmplots_view</pluginpath>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module> <!-- main experiment switch -->
+
+                <branch> <!-- localiser -->
+                    <analysisid_suffix>visobjlocaliser</analysisid_suffix>
+                    <selected_sessions>localiser-*</selected_sessions>
+                    <module>
+
+                        <branch>
+                            <!-- Localiser analysis, smoothed -->
+                            <analysisid_suffix>_smoothed</analysisid_suffix>
+                            <selected_sessions>localiser-*</selected_sessions>
+                            <module><name>aamod_smooth</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <FWHM>4</FWHM>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_firstlevel_init</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <TR>1.06</TR>
+                                                    <highpassfilter>Inf</highpassfilter>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_firstlevel_events_visobjlocaliser</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <sessiontarget>localiser-</sessiontarget>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_firstlevel_trends</name></module>
+                            <module><name>aamod_firstlevel_design</name></module>
+                            <module><name>aamod_firstlevel_estimate</name></module>
+                            <module><name>aamod_firstlevel_contrasts</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <contrasts>
+                                                        <eachagainstbaseline>1</eachagainstbaseline>
+                                                        <oneconperrun>1</oneconperrun>
+                                                        <subject>*</subject>
+                                                        <con>
+                                                            <item>
+                                                                <name>eye4</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>eye(4)</vector>
+                                                                <type>F</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>all-o-baseline</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>1 1 1 1</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>face-o-place</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>1 -1 0 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>face-o-object</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>1 0 -1 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>face-o-scrambled</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>1 0 0 -1</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>place-o-face</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>-1 1 0 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>place-o-object</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>0 1 -1 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>place-o-scrambled</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>0 1 0 -1</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>object-o-face</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>-1 0 1 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>object-o-place</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>0 -1 1 0</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>object-o-scrambled</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>-0 0 1 -1</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                            <item>
+                                                                <name>intact-o-scrambled</name>
+                                                                <format>sameforallsessions</format>
+                                                                <vector>1 1 1 -3</vector>
+                                                                <type>T</type>
+                                                            </item>
+                                                        </con>
+                                                    </contrasts>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                        </branch>  <!-- smoothed -->
+                    </module>
+                </branch> <!-- visobjlocaliser -->
+
+            </module> <!-- main experiment switch -->
+            <module><name>aamod_garbagecollection</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <permanencethreshold>2</permanencethreshold>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+        </main>
+    </tasklist>
+</aap>

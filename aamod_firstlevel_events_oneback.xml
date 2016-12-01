@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aap>
+    <tasklist>
+        <currenttask domain='subject' desc='add oneback events and split subruns' modality='MRI' >
+            <qsub>
+                <timeBase>1</timeBase>
+                <memoryBase>1</memoryBase>
+            </qsub>
+            <permanenceofoutput>1</permanenceofoutput>
+            <sessiontarget>oneback-</sessiontarget>
+            <splitsubruns>1</splitsubruns>
+            <collapseview>0</collapseview>
+            <inputstreams>
+                <stream>firstlevel_spm</stream>  
+            </inputstreams>
+            <outputstreams>
+                <stream>firstlevel_spm</stream>
+            </outputstreams>
+        </currenttask>
+    </tasklist>
+</aap>
