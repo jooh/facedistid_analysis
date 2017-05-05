@@ -9,7 +9,7 @@ for n = 1:nargin
         case 'delta_direction'
             names(end+1) = {'\Deltadirection'};
         case 'full'
-            names(end+1) = {'face space distance'};
+            names(end+1) = {'PCA space distance'};
         case {'facepairs','fit: facepairs'}
             names(end+1) = {'perceptual judgments'};
         case {'GWP','gwp','gwpgrid'}
