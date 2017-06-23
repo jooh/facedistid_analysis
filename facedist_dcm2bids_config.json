@@ -1,0 +1,119 @@
+{
+    "descriptions": [
+        {
+            "dataType": "anat",
+            "suffix": "T1w",
+            "criteria": {
+                "in": {"ProtocolName": "MEMPRAGE_4E_1mm"},
+                "suffix": ""
+            },
+            "customHeader": {
+                "PulseSequenceType": "Multi-echo MPRAGE",
+                "ParallelReductionFactorInPlane": 2,
+                "ParallelAcquisitionTechnique": "GRAPPA",
+                "InstitutionName": "MRC Cognition and Brain Sciences Unit",
+                "InstitutionAddress": "15 Chaucer Road, Cambridge CB2 7EF, UK",
+                "SliceEncodingDirection": "j-",
+                "HardcopyDeviceSoftwareVersion": "VB17",
+                "ReceiveCoilName": "32 Chn Head",
+                "MatrixCoilMode": "Auto",
+                "CoilCombinationMethod": "Adaptive Combine"
+
+            }
+        },
+        {
+            "dataType": "func",
+            "suffix": "bold",
+            "criteria": {
+                "equal": {"ProtocolName": "3D_EPI_2mm_localiser_B380"}
+            },
+            "customHeader": {
+                "TaskName": "localizer",
+                "SliceTiming": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "PulseSequenceType": "3D Gradient Echo Planar Imaging",
+                "NumberShots": 1,
+                "ParallelReductionFactorInPlane": 2,
+                "ParallelAcquisitionTechnique": "GRAPPA",
+                "RepetitionTime": 1.06,
+                "InstitutionName": "MRC Cognition and Brain Sciences Unit",
+                "InstitutionAddress": "15 Chaucer Road, Cambridge CB2 7EF, UK",
+                "SliceEncodingDirection": "k",
+                "HardcopyDeviceSoftwareVersion": "VB17",
+                "ReceiveCoilName": "32 Chn Head",
+                "MatrixCoilMode": "Auto",
+                "CoilCombinationMethod": "Sum of squares"
+            }
+
+        },
+        {
+            "dataType": "func",
+            "suffix": "bold",
+            "criteria": {
+                "equal": {"ProtocolName": "3D_EPI_2mm_B940"}
+            },
+            "customHeader": {
+                "TaskName": "main",
+                "SliceTiming": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "PulseSequenceType": "3D Gradient Echo Planar Imaging",
+                "NumberShots": 1,
+                "ParallelReductionFactorInPlane": 2,
+                "ParallelAcquisitionTechnique": "GRAPPA",
+                "RepetitionTime": 1.06,
+                "InstitutionName": "MRC Cognition and Brain Sciences Unit",
+                "InstitutionAddress": "15 Chaucer Road, Cambridge CB2 7EF, UK",
+                "SliceEncodingDirection": "k",
+                "HardcopyDeviceSoftwareVersion": "VB17",
+                "ReceiveCoilName": "32 Chn Head",
+                "MatrixCoilMode": "Auto",
+                "CoilCombinationMethod": "Sum of squares"
+            }
+        },
+        {
+            "dataType": "func",
+            "suffix": "bold",
+            "criteria": {
+                "equal": {"ProtocolName": "3D_EPI_2mm"}
+            },
+            "customHeader": {
+                "TaskName": "main",
+                "SliceTiming": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "PulseSequenceType": "3D Gradient Echo Planar Imaging",
+                "NumberShots": 1,
+                "ParallelReductionFactorInPlane": 2,
+                "ParallelAcquisitionTechnique": "GRAPPA",
+                "RepetitionTime": 1.06,
+                "InstitutionName": "MRC Cognition and Brain Sciences Unit",
+                "InstitutionAddress": "15 Chaucer Road, Cambridge CB2 7EF, UK",
+                "SliceEncodingDirection": "k",
+                "HardcopyDeviceSoftwareVersion": "VB17",
+                "ReceiveCoilName": "32 Chn Head",
+                "MatrixCoilMode": "Auto",
+                "CoilCombinationMethod": "Sum of squares"
+            }
+        },
+        {
+            "dataType": "func",
+            "suffix": "bold",
+            "criteria": {
+                "equal": {"ProtocolName": "3D_EPI_2mm_localiser"}
+            },
+            "customHeader": {
+                "TaskName": "localizer",
+                "SliceTiming": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                "PulseSequenceType": "3D Gradient Echo Planar Imaging",
+                "NumberShots": 1,
+                "ParallelReductionFactorInPlane": 2,
+                "ParallelAcquisitionTechnique": "GRAPPA",
+                "RepetitionTime": 1.06,
+                "InstitutionName": "MRC Cognition and Brain Sciences Unit",
+                "InstitutionAddress": "15 Chaucer Road, Cambridge CB2 7EF, UK",
+                "SliceEncodingDirection": "k",
+                "HardcopyDeviceSoftwareVersion": "VB17",
+                "ReceiveCoilName": "32 Chn Head",
+                "MatrixCoilMode": "Auto",
+                "CoilCombinationMethod": "Sum of squares"
+            }
+        }
+    ],
+    "config": {"dcmdirpattern": "Series_*"}
+}

@@ -88,7 +88,7 @@ switch ncon
                         names{r});
                     continue
                 end
-                error('non-mdscale error');
+                rethrow(err)
             end
         end
         close(F);

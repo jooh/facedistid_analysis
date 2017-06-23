@@ -5,14 +5,22 @@ function rdms = facedist_rsapredictors(subname,varargin)
 
 oldpath = path;
 
-start_psychtoolbox;
-    
-% find exp dir
-expdir = fileparts(which('exp_oneback'));
-subexp = fullfile(expdir,'subjects',subname);
+% function to add psychtoolbox functions to the path - you may not need this,
+% but on the CBU cluster Matlab figure rendering breaks when this is on the path
+% so I tend to leave it off...
+try
+    start_psychtoolbox;
+catch err
+    assert(strcmp(err.identifier,'MATLAB:undefinedfunction'),'unknown error');
+end
+
+rootdir = fileparts(fileparts(mfilename('fullpath')));
+subname = subname{1}(1:6);
+behaviourdir = fullfile(rootdir,'bids','misc',subname);
+assert(exist(behaviourdir,'dir')~=0,'could not find behaviourdir: %s',behaviourdir);
 
 % process stimulusspace - basic predictions across full matrix
-stimpath = fullfile(subexp,'nose_stim_spherevectors.mat');
+stimpath = fullfile(behaviourdir,'stimuli_mri.mat');
 ss = loadbetter(stimpath);
 
 rdmfull = struct('name','full','RDM',...
@@ -85,9 +93,9 @@ clear ss
 baseinds = 1:4;
 
 % add rating task
-pairpath = fullfile(subexp,'data_exp_facepairs','subdata.mat');
+pairpath = fullfile(behaviourdir,'data_perceptual_judgment_task.mat');
 subdata = loadbetter(pairpath);
-assert(length(subdata)==16 || strcmp(lower(subname),'be'),...
+assert(length(subdata)==16 || strcmp(subname,'sub-01'),...
     'incorrect number of facepairs sessions')
 rdsum = zeros(12,12);
 for sess = 1:length(subdata)
@@ -99,55 +107,6 @@ clear subdata
 % binary viewpoint RDM
 rdms(end+1) = struct('name','view','RDM',squareform(pdist(...
     [ones(12,1); zeros(12,1)],'meandist')));
-
-% score questionnaire data
-doquest = false;
-
-if doquest
-    ratepath = fullfile(subexp,'data_exp_vidrate','subdata.mat');
-    subdata = loadbetter(ratepath);
-    % get items
-    items = readquestcsv(fullfile(expdir,'exp_imagerate_qitems.csv'));
-    % one catch - apparently LT only had a single session of the task
-    % (everyone else had 2 I think)
-    for it = 1:length(items)
-        rating = zeros(12,1);
-        for sess = 1:length(subdata)
-            keys = subdata(sess).res.validkeys;
-            score = subdata(sess).res.score;
-            [junk,sessrating] = ismember(score(it+1).respk,keys);
-            rating = rating + sessrating';
-        end
-        meanrating = rating / length(subdata);
-        % extract construct name
-        itname = textscan(items(it).label_high,'%s');
-        itname = sprintf('vidrate-%s',itname{1}{end});
-        rdms(end+1) = struct('name',itname,'RDM',squareform(pdist(...
-            meanrating,'meandist')));
-    end
-    % Also do patterns across constructs - basic emotions and
-    % dominance/trustworthiness
-    compounds = struct('name',{'basicemotion','todorov'},...
-        'inds',{5:10,11:12});
-    for c = 1:length(compounds)
-        ninds = length(compounds(c).inds);
-        rating = zeros(12,ninds);
-        for it = 1:ninds
-            compind = compounds(c).inds(it);
-            for sess = 1:length(subdata)
-                keys = subdata(sess).res.validkeys;
-                score = subdata(sess).res.score;
-                [junk,sessrating] = ismember(score(compind+1).respk,...
-                    keys);
-                rating(:,it) = rating(:,it) + sessrating';
-            end
-        end
-        meanrating = rating / length(subdata);
-        rdms(end+1) = struct('name',sprintf('vidrate-%s',...
-            compounds(c).name),'RDM',squareform(pdist(...
-            meanrating,'euclidean')));
-    end
-end
 
 % view-specific variants
 diagonal = logical(eye(24));

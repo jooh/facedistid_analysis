@@ -1,11 +1,12 @@
 function stimuli = facedist_importstimuli(subname)
 
-% find exp dir
-expdir = fileparts(which('exp_oneback'));
-subexp = fullfile(expdir,'subjects',subname);
+rootdir = fileparts(fileparts(mfilename('fullpath')));
+subname = subname{1}(1:6);
+behaviourdir = fullfile(rootdir,'bids','misc',subname);
+assert(exist(behaviourdir,'dir')~=0,'could not find behaviourdir: %s',behaviourdir);
 
 % process stimulusspace
-stimpath = fullfile(subexp,'nose_stim_spherevectors.mat');
+stimpath = fullfile(behaviourdir,'stimuli_mri.mat');
 ss = loadbetter(stimpath);
 stimuli = struct('image',{ss.stimulus.imagealpha},'alpha',...
     {ss.stimulus.alpha},'shape',{ss.stimulus.shape},...

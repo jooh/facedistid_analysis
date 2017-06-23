@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aap>
+    <tasklist>
+        <initialisation>
+            <module><name>aamod_checkparameters</name></module>
+            <module><name>aamod_evaluatesubjectnames</name></module>            
+            <module><name>aamod_study_init</name></module>
+            <module><name>aamod_newsubj_init</name></module>
+        </initialisation>
+        
+        <main>
+            <!-- import from bids folder, correct header origin to SPM default -->
+            <module><name>aamod_structuralfromnifti</name></module>
+            <module><name>aamod_epifromnifti</name></module>
+            <!-- no good?
+            <module><name>aamod_reorienttomiddle_structural</name></module>
+            <module><name>aamod_reorienttomiddle_epi</name></module>
+            -->
+            
+            <!-- Structural preprocessing -->
+            <module><name>aamod_biascorrect_structural</name></module>
+            <module><name>aamod_denoiseANLM</name></module>
+
+            <!-- Functional -->
+            <module><name>aamod_realign</name></module>
+            <module><name>aamod_coreg_noss</name></module>
+
+            <module><name>aamod_bet_premask</name></module>
+            <module><name>aamod_bet</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <!-- we want a generous brain
+                                         extraction (default .5) -->
+                                    <bet_f_parameter>.3</bet_f_parameter>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module><name>aamod_bet_epi_reslicing</name></module>
+            <module><name>aamod_pilab_mask_importbet</name></module>
+ 
+            <!--
+            <module><name>aamod_coreg_extended_2epi</name></module>
+            -->
+            <module><name>aamod_norm_noss</name></module>
+            <module><name>aamod_meanstructural</name></module>
+            <module><name>aamod_pilab_importstimuli</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <stimfun>facedist_importstimuli</stimfun>
+                                    <plotdims>6 4</plotdims>
+                                    <donumbers>0</donumbers>
+                                    <resortind>facedist_resortind</resortind>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module><name>aamod_pilab_importrsapredictors</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <predictorfun>facedist_rsapredictors</predictorfun>
+                                    <resortind>facedist_resortind</resortind>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                <extraparameters>
+                    <aap><tasklist><currenttask><settings>
+                                    <nrows>4</nrows>
+                                    <gridlines>4 8 12 16 20</gridlines>
+                                    <pluginpath>facedist_rdmplots_view</pluginpath>
+                    </settings></currenttask></tasklist></aap>
+                </extraparameters>
+            </module>
+            <module>
+                <branch> <!-- localiser -->
+                    <analysisid_suffix>visobjlocalisersplit</analysisid_suffix>
+                    <selected_sessions>localizer_01_run-01 localizer_01_run-02 localizer_02_run-01 localizer_02_run-02 localizer_03_run-01 localizer_03_run-02 localizer_04_run-01 localizer_04_run-02</selected_sessions>
+                    <module><name>aamod_smooth</name>
+                        <extraparameters>
+                            <aap><tasklist><currenttask><settings>
+                                            <FWHM>4</FWHM>
+                            </settings></currenttask></tasklist></aap>
+                        </extraparameters>
+                    </module>
+                    <module><name>aamod_firstlevel_model_1_config</name>
+                        <extraparameters>
+                            <aap><tasklist><currenttask><settings>
+                                            <TR>1.06</TR>
+                                            <includespikes>0</includespikes>
+                                            <includemovementpars>0</includemovementpars>
+                            </settings></currenttask></tasklist></aap>
+                        </extraparameters>
+                    </module>
+                    <module><name>aamod_firstlevel_model_2_convolve</name></module>
+                    <module><name>aamod_firstlevel_model_3_estimate</name></module>
+                    <module><name>aamod_firstlevel_contrasts_j</name>
+                        <extraparameters>
+                            <aap><tasklist><currenttask><settings>
+                                            <contrasts>
+                                                <eachagainstbaseline>1</eachagainstbaseline>
+                                                <oneconperrun>0</oneconperrun>
+                                                <subject>*</subject>
+                                                <con>
+                                                    <item>
+                                                        <name>eye4</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>eye(4)</vector>
+                                                        <type>F</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>all-o-baseline</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>1 1 1 1</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>face-o-place</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>1 0 -1 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>face-o-object</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>1 -1 0 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>face-o-scrambled</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>1 0 0 -1</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>place-o-face</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>-1 0 1 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>place-o-object</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>0 -1 1 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>place-o-scrambled</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>0 0 1 -1</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>object-o-face</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>-1 1 0 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>object-o-place</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>0 1 -1 0</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>object-o-scrambled</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>-0 1 0 -1</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                    <item>
+                                                        <name>intact-o-scrambled</name>
+                                                        <format>sameforallsessions</format>
+                                                        <vector>1 1 1 -3</vector>
+                                                        <type>T</type>
+                                                    </item>
+                                                </con>
+                                            </contrasts>
+                            </settings></currenttask></tasklist></aap>
+                        </extraparameters>
+                    </module>
+                </branch> <!-- visobjlocaliser -->
+                <branch> <!-- facedist -->
+                    <analysisid_suffix>facedist</analysisid_suffix>
+                    <selected_sessions>main_01_run-01 main_01_run-02 main_02_run-01 main_02_run-02 main_03_run-01 main_03_run-02 main_04_run-01 main_04_run-02 </selected_sessions>
+                    <module><name>aamod_firstlevel_model_1_config</name>
+                        <extraparameters>
+                            <aap><tasklist><currenttask><settings>
+                                            <TR>1.06</TR>
+                                            <includespikes>0</includespikes>
+                                            <includemovementpars>0</includemovementpars>
+                            </settings></currenttask></tasklist></aap>
+                        </extraparameters>
+                    </module>
+                    <module><name>aamod_firstlevel_model_subrunsplit</name>
+                        <extraparameters>
+                            <aap><tasklist><currenttask><settings>
+                                            <split>
+                                                <item>1 461</item>
+                                                <item>469 929</item>
+                                            </split>
+                            </settings></currenttask></tasklist></aap>
+                        </extraparameters>
+                    </module>
+                    <module> <!-- view / collapsed view design -->
+                        <branch> <!-- _view -->
+                            <analysisid_suffix>_view</analysisid_suffix>
+                            <module><name>aamod_firstlevel_model_2_convolve</name></module>
+                            <module><name>aamod_pilab_epiandmodel2volume</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <maskbybright>1</maskbybright>
+                                                    <!-- now lower for
+                                                         better group mask -->
+                                                    <brainthresh>99 .2</brainthresh>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_preprocess</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <setclass>single</setclass>
+                                                    <matchn>1</matchn>
+                                                    <covariatedeg>adaptive</covariatedeg>
+                                                    <resortind>facedist_resortind</resortind>
+                                                    <zscore>0</zscore>
+                                                    <percentsignal>1</percentsignal>
+                                        </settings></currenttask></tasklist></aap>
+                                    </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_mask_norm</name></module>
+                            <module><name>aamod_pilab_importrois</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <roiroot>/imaging/jc01/research/idanddistinct/bids/derivatives/rois</roiroot>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+
+                            <module> <!-- froi / froi_demean / searchlight -->
+                                <branch> <!-- froi -->
+                                    <analysisid_suffix>_froi</analysisid_suffix>
+                                    <module><name>aamod_pilab_rdms_lindisc</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <searchvol>0</searchvol>
+                                                            <split></split>
+                                                            <cvsplit></cvsplit>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module> <!-- type of analysis -->
+                                        <branch> <!-- _glm -->
+                                            <analysisid_suffix>_glm</analysisid_suffix>
+                                            <module><name>aamod_pilab_roitimecourses</name></module>
+                                            <module><name>aamod_pilab_glm</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <customfits></customfits>
+                                                                    <contrasts>facedist_glm_contrasts</contrasts>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <targetfield>b</targetfield>
+                                                                    <nperm>1024</nperm>
+                                                                    <nboot>1000</nboot>
+                                                                    <minn>9</minn>
+                                                                    <transfun></transfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_glm_visualisation_rfx</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <pluginpath>facedist_rsa_plots_meanslopes</pluginpath>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _glm -->
+
+                                        <branch> <!-- mean -->
+                                            <analysisid_suffix>_mean</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_mean_tuning</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <rsaclass>MeanRSA</rsaclass>
+                                                                    <splitrsaclass>MeanRSA</splitrsaclass>
+                                                                    <customfits>facedist_customfits_mean</customfits>
+                                                                    <contrasts>facedist_rsa_rfx_contrasts_meanslopes</contrasts>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>1024</nperm>
+                                                                    <nboot>1000</nboot>
+                                                                    <minn>9</minn>
+                                                                    <transfun></transfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <pluginpath>facedist_rsa_plots_meanslopes</pluginpath>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _mean -->
+
+                                        <branch> <!-- rsaglm -->
+                                            <analysisid_suffix>_rsaglm</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_glm</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nrows>4</nrows>
+                                                                    <gridlines>4 8 12 16 20</gridlines>
+                                                                    <pluginpath></pluginpath>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsaglm</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <contrasts>facedist_rsaglm_contrasts</contrasts>
+                                                                    <customfun>
+                                                                        <item>predictY</item>
+                                                                        <item>residuals</item>
+                                                                        <item>getdata</item>
+                                                                    </customfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <targetfield>b</targetfield>
+                                                                    <nperm>1024</nperm>
+                                                                    <nboot>1000</nboot>
+                                                                    <minn>9</minn>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <pluginpath>facedist_rsaglm_plots</pluginpath>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _rsaglm -->
+
+                                    </module> <!-- type of analysis -->
+                                </branch> <!-- froi -->
+                                <branch> <!-- froi_demean -->
+                                    <analysisid_suffix>_froi_demean</analysisid_suffix>
+                                    <module><name>aamod_pilab_rdms_lindisc</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <searchvol>0</searchvol>
+                                                            <glmclass>CentroidGLM</glmclass>
+                                                            <split></split>
+                                                            <cvsplit></cvsplit>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module> <!-- type of analysis -->
+
+                                        <branch> <!-- mean -->
+                                            <analysisid_suffix>_mean</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_mean_tuning</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <rsaclass>MeanRSA</rsaclass>
+                                                                    <splitrsaclass>MeanRSA</splitrsaclass>
+                                                                    <customfits>facedist_customfits_mean</customfits>
+                                                                    <contrasts>facedist_rsa_rfx_contrasts_meanslopes</contrasts>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>1024</nperm>
+                                                                    <nboot>1000</nboot>
+                                                                    <minn>9</minn>
+                                                                    <transfun></transfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <pluginpath>facedist_rsa_plots_meanslopes</pluginpath>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _mean -->
+
+                                        <branch> <!-- rsaglm -->
+                                            <analysisid_suffix>_rsaglm</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_glm</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nrows>4</nrows>
+                                                                    <gridlines>4 8 12 16 20</gridlines>
+                                                                    <pluginpath></pluginpath>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsaglm</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <contrasts>facedist_rsaglm_contrasts</contrasts>
+                                                                    <customfun>
+                                                                        <item>predictY</item>
+                                                                        <item>residuals</item>
+                                                                        <item>getdata</item>
+                                                                    </customfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <targetfield>b</targetfield>
+                                                                    <nperm>1024</nperm>
+                                                                    <nboot>1000</nboot>
+                                                                    <minn>9</minn>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <pluginpath>facedist_rsaglm_plots</pluginpath>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _rsaglm -->
+                                    </module> <!-- type of analysis -->
+                                </branch> <!-- froi_demean -->
+                                <branch> <!-- searchlight -->
+                                    <analysisid_suffix>_searchlight</analysisid_suffix>
+                                    <module><name>aamod_pilab_searchlight_init</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <searchlighttype>nvox</searchlighttype>
+                                                            <searchlightparameter>200</searchlightparameter>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rdms_lindisc</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <searchvol>1</searchvol>
+                                                            <split></split>
+                                                            <cvsplit></cvsplit>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rdms_norm</name></module>
+                                    <module> <!-- type of analysis -->
+                                        <branch> <!-- mean -->
+                                            <analysisid_suffix>_mean</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_mean_tuning</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nrows>2</nrows>
+                                                                    <gridlines>4 8</gridlines>
+                                                                    <runstandardplots>0</runstandardplots>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsa</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <rsaclass>MeanRSA</rsaclass>
+                                                                    <splitrsaclass>MeanRSA</splitrsaclass>
+                                                                    <customfits>facedist_customfits_mean</customfits>
+                                                                    <contrasts>facedist_rsa_rfx_contrasts_meanslopes</contrasts>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx_searchlight</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>1024</nperm>
+                                                                    <varsmoothfwhm>8</varsmoothfwhm>
+                                                                    <transfun></transfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _mean -->
+
+                                        <branch> <!-- rsaglm -->
+                                            <analysisid_suffix>_rsaglm</analysisid_suffix>
+                                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <predictorfun>facedist_rsapredictors_glm</predictorfun>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rsaglm</name> <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <nperm>0</nperm>
+                                                                    <nboot>0</nboot>
+                                                                    <contrasts>roidata_allpairwisecontrasts</contrasts>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                            <module><name>aamod_pilab_rfx_searchlight</name>
+                                                <extraparameters>
+                                                    <aap><tasklist><currenttask><settings>
+                                                                    <targetfield>b</targetfield>
+                                                                    <nperm>1024</nperm>
+                                                                    <varsmoothfwhm>8</varsmoothfwhm>
+                                                    </settings></currenttask></tasklist></aap>
+                                                </extraparameters>
+                                            </module>
+                                        </branch> <!-- _rsaglm -->
+
+                                    </module> <!-- type of analysis -->
+                                </branch> <!-- searchlight -->
+                            </module> <!-- froi / froi_demean / searchlight -->
+                        </branch> <!-- _view -->
+
+                        <branch> <!-- _collapseview_froi -->
+                            <analysisid_suffix>_collapseview_froi</analysisid_suffix>
+                            <selected_sessions>main-*</selected_sessions>
+                            <module><name>aamod_pilab_importstimuli</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <stimfun>facedist_importstimuli</stimfun>
+                                                    <selectinds>1:12</selectinds>
+                                                    <plotdims>6 2</plotdims>
+                                                    <donumbers>0</donumbers>
+                                                    <resortind>facedist_resortind</resortind>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_selectrsapredictors</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <predictorfun>facedist_rsapredictors_collapseview</predictorfun>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <nrows>2</nrows>
+                                                    <gridlines>4 8</gridlines>
+                                                    <pluginpath>facedist_rdmplots_view</pluginpath>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_firstlevel_model_2_convolve</name></module>
+                            <module><name>aamod_pilab_epiandmodel2volume</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <maskbybright>1</maskbybright>
+                                                    <!-- now lower for
+                                                         better group mask -->
+                                                    <brainthresh>99 .2</brainthresh>
+                                                    <ignorelabels><item>responses</item></ignorelabels>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_preprocess</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <setclass>single</setclass>
+                                                    <matchn>1</matchn>
+                                                    <covariatedeg>adaptive</covariatedeg>
+                                                    <resortind>facedist_resortind</resortind>
+                                                    <zscore>0</zscore>
+                                                    <percentsignal>1</percentsignal>
+                                        </settings></currenttask></tasklist></aap>
+                                    </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_mask_norm</name></module>
+                            <module><name>aamod_pilab_importrois</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <roiroot>/imaging/jc01/research/idanddistinct/bids/derivatives/rois</roiroot>
+                                                    <subdir>spm2roi</subdir>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_rdms_lindisc</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <nperms>0</nperms>
+                                                    <searchvol>0</searchvol>
+                                                    <split></split>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_rdms2result</name></module>
+                            <module><name>aamod_pilab_rfx</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <targetfield>d</targetfield>
+                                                    <nperm>1024</nperm>
+                                                    <multpdim>con</multpdim>
+                                                    <nboot>1000</nboot>
+                                                    <keepnans>1</keepnans>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_pilab_rdms_visualisation_group</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <nrows>2</nrows>
+                                                    <mtarget>mean</mtarget>
+                                                    <gridlines>4 8</gridlines>
+                                                    <runstandardplots>0</runstandardplots>
+                                                    <pluginpath>
+                                                        <item>facedist_rdmplots</item>
+                                                        <item>facedist_rdmplots_view</item>
+                                                    </pluginpath>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module> <!-- type of analysis -->
+                                
+                                <branch> <!-- mean -->
+                                    <analysisid_suffix>_mean</analysisid_suffix>
+                                    <module><name>aamod_pilab_selectrsapredictors</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <predictorfun>facedist_rsapredictors_mean_tuning</predictorfun>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rsa</name> <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <nperm>0</nperm>
+                                                            <nboot>0</nboot>
+                                                            <rsaclass>MeanRSA</rsaclass>
+                                                            <splitrsaclass>MeanRSA</splitrsaclass>
+                                                            <customfits>facedist_customfits_mean</customfits>
+                                                            <contrasts>facedist_rsa_rfx_contrasts_meanslopes</contrasts>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rfx</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <nperm>1024</nperm>
+                                                            <nboot>1000</nboot>
+                                                            <minn>9</minn>
+                                                            <transfun></transfun>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <runstandardplots>0</runstandardplots>
+                                                            <pluginpath>facedist_rsa_plots_meanslopes</pluginpath>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                </branch> <!-- _mean -->
+
+                                <branch> <!-- rsaglm -->
+                                    <analysisid_suffix>_rsaglm</analysisid_suffix>
+                                    <module><name>aamod_pilab_selectrsapredictors</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <predictorfun>facedist_rsapredictors_glm</predictorfun>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rsa_predictorvisualisation_group</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <nrows>4</nrows>
+                                                            <gridlines>4 8</gridlines>
+                                                            <pluginpath></pluginpath>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rsaglm</name> <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <nperm>0</nperm>
+                                                            <nboot>0</nboot>
+                                                            <contrasts>roidata_allpairwisecontrasts</contrasts>
+                                                            <customfun>
+                                                                <item>predictY</item>
+                                                                <item>residuals</item>
+                                                                <item>getdata</item>
+                                                            </customfun>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rfx</name>
+                                        <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <targetfield>b</targetfield>
+                                                            <nperm>1024</nperm>
+                                                            <nboot>1000</nboot>
+                                                            <minn>9</minn>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                    <module><name>aamod_pilab_rsa_visualisation_rfx</name> <extraparameters>
+                                            <aap><tasklist><currenttask><settings>
+                                                            <pluginpath>facedist_rsaglm_plots</pluginpath>
+                                                            <runstandardplots>0</runstandardplots>
+                                            </settings></currenttask></tasklist></aap>
+                                        </extraparameters>
+                                    </module>
+                                </branch> <!-- _rsaglm -->
+                            </module> <!-- type of analysis -->
+                        </branch> <!-- _collapseview -->
+                    </module> <!-- view or collapsed view design -->
+                </branch> <!-- facedist -->
+
+            </module>
+        </main>
+    </tasklist>
+</aap>
