@@ -571,7 +571,6 @@
 
                         <branch> <!-- _collapseview_froi -->
                             <analysisid_suffix>_collapseview_froi</analysisid_suffix>
-                            <selected_sessions>main-*</selected_sessions>
                             <module><name>aamod_pilab_importstimuli</name>
                                 <extraparameters>
                                     <aap><tasklist><currenttask><settings>
@@ -596,6 +595,13 @@
                                                     <nrows>2</nrows>
                                                     <gridlines>4 8</gridlines>
                                                     <pluginpath>facedist_rdmplots_view</pluginpath>
+                                    </settings></currenttask></tasklist></aap>
+                                </extraparameters>
+                            </module>
+                            <module><name>aamod_firstlevel_model_collapsepredictors</name>
+                                <extraparameters>
+                                    <aap><tasklist><currenttask><settings>
+                                                    <collapsefun>facedist_collapsespm</collapsefun>
                                     </settings></currenttask></tasklist></aap>
                                 </extraparameters>
                             </module>
@@ -628,7 +634,6 @@
                                 <extraparameters>
                                     <aap><tasklist><currenttask><settings>
                                                     <roiroot>/imaging/jc01/research/idanddistinct/bids/derivatives/rois</roiroot>
-                                                    <subdir>spm2roi</subdir>
                                     </settings></currenttask></tasklist></aap>
                                 </extraparameters>
                             </module>

@@ -1,8 +1,12 @@
 function stimuli = facedist_importstimuli(subname)
 
-rootdir = fileparts(fileparts(mfilename('fullpath')));
-subname = subname{1}(1:6);
-behaviourdir = fullfile(rootdir,'bids','misc',subname);
+% the root directory is 2 levels down (e.g. bidsdir/code/facedistid_analysis)
+rootdir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+if iscell(subname)
+    % unpack AA5-style sub names (one cell per session)
+    subname = subname{1}(1:6);
+end
+behaviourdir = fullfile(rootdir,'misc',subname);
 assert(exist(behaviourdir,'dir')~=0,'could not find behaviourdir: %s',behaviourdir);
 
 % process stimulusspace

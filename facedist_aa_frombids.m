@@ -5,6 +5,14 @@
 % * pilab_aa 
 % * study-specific code (facedistid_analysis repo - hey you're in it!)
 %
+% ARGUMENTS:
+% dolocal=false     run local instead of using qsub
+% reinit=false      regenerate the aap struct (necessary whenever tasklist or
+%                       parameters change) 
+%
+% 2017-06-28 J Carlin
+%
+% facedist_aa_frombids([dolocal=false],[reinit=false])
 function facedist_aa_frombids(dolocal,reinit)
 
 % could be persistent but then the variable is only saved when the function
@@ -24,8 +32,9 @@ if (exist('reinit','var') && reinit) || isempty(facedist_aap)
     % facedist_aap.options.email='johan.carlin@mrc-cbu.cam.ac.uk';
 
     %% STUDY
-    % Directory for analysed data - we assume this code lives in bidsroot/code
-    rootdir = fileparts(fileparts(mfilename('fullpath')));
+    % Directory for analysed data - we assume this code lives 3 levels down in
+    % e.g. rootdir/code/facedistid_analysis
+    rootdir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     facedist_aap.acq_details.root = fullfile(rootdir,'derivatives');
     facedist_aap.directory_conventions.analysisid = 'aa'; 
 
