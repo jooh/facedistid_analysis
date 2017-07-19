@@ -6,7 +6,7 @@ if iscell(subname)
     % unpack AA5-style sub names (one cell per session)
     subname = subname{1}(1:6);
 end
-behaviourdir = fullfile(rootdir,'misc',subname);
+behaviourdir = fullfile(rootdir,'sourcedata','misc',subname);
 assert(exist(behaviourdir,'dir')~=0,'could not find behaviourdir: %s',behaviourdir);
 
 % process stimulusspace

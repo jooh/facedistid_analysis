@@ -16,7 +16,7 @@ end
 
 rootdir = fileparts(fileparts(mfilename('fullpath')));
 subname = subname{1}(1:6);
-behaviourdir = fullfile(rootdir,'bids','misc',subname);
+behaviourdir = fullfile(rootdir,'bids','sourcedata','misc',subname);
 assert(exist(behaviourdir,'dir')~=0,'could not find behaviourdir: %s',behaviourdir);
 
 % process stimulusspace - basic predictions across full matrix
