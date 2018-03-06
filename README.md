@@ -8,5 +8,4 @@ with individual­face fMRI responses](https://doi.org/10.1101/029603). BioRXiv
 
 Processed data (distance matrices, models, code) is available on
 [zenodo](http://doi.org/10.5281/zenodo.242666) and
-[OSF](http://doi.org/10.17605/OSF.IO/5G9RV). Raw data will shortly be available
-on openfmri.org.
+[OSF](http://doi.org/10.17605/OSF.IO/5G9RV). Raw fMRI data is available on [openfmri](https://openfmri.org/dataset/ds000232/).
