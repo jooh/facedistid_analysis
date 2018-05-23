@@ -1,7 +1,7 @@
 % fevaled in aamod_pilab_importrsapredictors
 %
-% rdms = facedist_rsapredictors(subname)
-function rdms = facedist_rsapredictors(subname,varargin)
+% [rdms,ss] = facedist_rsapredictors(subname)
+function [rdms,ss] = facedist_rsapredictors(subname,varargin)
 
 oldpath = path;
 
@@ -86,8 +86,6 @@ rdms = [rdmfull newrdms];
 
 rdms(end+1) = struct('name','vid_corrdist','RDM',...
     ss.rdmbyattribute('videoview','corr'));
-
-clear ss
 
 % indices corresponding to basic predictors
 baseinds = 1:4;

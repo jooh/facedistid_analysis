@@ -4,6 +4,11 @@
 % resortind = facedist_resortind(n)
 function resortind = facedist_resortind(n)
 
+% from cell array of labels to just the number
+if numel(n) > 1
+    n = numel(n);
+end
+
 switch n
     case 12
         % sort according to eccentricity
